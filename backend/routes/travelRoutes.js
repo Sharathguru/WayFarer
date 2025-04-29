@@ -6,7 +6,7 @@ let router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     const { travelType, location, startDate, endDate, budget } = req.body;
-    
+
     const client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       baseURL: "https://openrouter.ai/api/v1",
@@ -31,7 +31,7 @@ router.post("/", async (req, res, next) => {
     "travel": 0
   },
   "tips": ["general tip 1", "general tip 2"]
-}`
+}`,
         },
       ],
     });
@@ -42,9 +42,12 @@ router.post("/", async (req, res, next) => {
       return next(err);
     }
     let content = response.choices[0].message.content;
-      content = content.replace(/```json\n/g, '').replace(/```/g, '').trim();
+    content = content
+      .replace(/```json\n/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-      const jsonData = JSON.parse(content);
+    const jsonData = JSON.parse(content);
 
     res.status(200).json({
       message: "Success",
