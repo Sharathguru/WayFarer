@@ -57,7 +57,7 @@ class ItineraryService {
             // return { message: "Success", data: jsonData, travelPlan: "newTravelPlan" };
 
         } catch (error) {
-            throw error;
+            throw err;
         }
 
     }
@@ -65,7 +65,7 @@ class ItineraryService {
     async saveItinerary(payload) {
         let newTravelPlan = await itineraryModel.create(payload);
         if (newTravelPlan) {
-            console.log("Travel Plan is saved ", newTravelPlan);
+            // console.log("Travel Plan is saved ", newTravelPlan);
             return "saved";
         } else {
             let error = new Error("Unable to save itinerary");
@@ -78,6 +78,16 @@ class ItineraryService {
         let alltravelPlan = await itineraryModel.find();
         if (alltravelPlan) {
             return alltravelPlan;
+        } else {
+            let err = new Error("Travel Plans not found");
+            err.statusCode = 404;
+            throw err;
+        }
+    }
+    async deleteItinerary(id) {
+        let deletedTravelPlan = await itineraryModel.findByIdAndDelete(id);
+        if (deletedTravelPlan) {
+            return deletedTravelPlan;
         } else {
             let err = new Error("Travel Plans not found");
             err.statusCode = 404;

@@ -7,5 +7,6 @@ const itineraryRouter = express.Router();
 
 itineraryRouter.post("/",validateSchema(itinerarySchema),itineraryController.travelPlan);
 itineraryRouter.get("/",itineraryController.getAllItinerary);
+itineraryRouter.delete("/:id",itineraryController.deleteItinerary);
 
 export default itineraryRouter;

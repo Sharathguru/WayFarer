@@ -12,6 +12,10 @@ class ItineraryController{
         let alltravelPlan = await itineraryService.getAllItinerary();
         res.status(200).json(alltravelPlan);
     }
+    async deleteItinerary(req,res,next){
+        await itineraryService.deleteItinerary(req.params.id);
+        res.sendStatus(204)
+    }
 
 }
 
