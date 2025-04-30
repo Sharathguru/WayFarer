@@ -4,7 +4,7 @@ import express from "express";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
-import travelRoutes from "./routes/travelRoutes.js";
+import itenaryRoutes from "./routes/itenary.routes.js";
 import { rateLimit } from 'express-rate-limit';
 import cors from "cors";
 connectDB();
@@ -25,7 +25,7 @@ app.use(limiter)
 app.use(cors()) // Enable CORS for all routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/travel",travelRoutes)
+app.use("/api/v1/itenary",itenaryRoutes)
 
 app.all("*", (req, res, next) => {
   let err = new Error("Page not found");

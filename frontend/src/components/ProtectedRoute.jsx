@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from "react";
+import useAuth from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { token } = useAuth();
   
+useEffect(() => {
+  if(token) {
+    return setIsAuthenticated(true); 
+  }
+  setIsAuthenticated(false);
+  setIsLoading(false);
+},[]) 
+
   useEffect(() => {
-    let token = localStorage.getItem("userToken");
-    if (token) {
-      setIsAuthenticated(true);
+    if (!isAuthenticated) {
+      navigate("/login");
     }
-    setIsLoading(false);
-  }, []);
+  }, [isAuthenticated, navigate]);
+
+
 
   if (isLoading) return <div>Loading...</div>;
 
   return isAuthenticated ? (
     children
   ) : (
-    <div>You are not authorized to access this page</div>
+    null
   );
 };
 

@@ -7,10 +7,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Welcome />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/signup" element={<Signup />}></Route>
       <Route
-        path="/"
+        path="/home"
         element={
           <ProtectedRoute>
             <Home />
