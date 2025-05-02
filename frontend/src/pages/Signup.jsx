@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
+import Navbar from '../components/Navbar';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -51,6 +52,8 @@ const Signup = () => {
   };
 
   return (
+    <div className="signup-container">
+      <Navbar/>
     <div className="form-container">
       <div className="form-wrapper">
         <h2>Sign Up</h2>
@@ -112,6 +115,7 @@ const Signup = () => {
           Already have an account? <Link to="/login">Login</Link>
         </div>
       </div>
+    </div>
     </div>
   );
 };

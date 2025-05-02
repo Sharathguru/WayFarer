@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
+import Navbar from '../components/Navbar';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +38,9 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container">
+   <div className="login-container">
+      <Navbar/>
+     <div className="form-container">
       <div className="form-wrapper">
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
@@ -75,6 +78,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+   </div>
   );
 };
 
