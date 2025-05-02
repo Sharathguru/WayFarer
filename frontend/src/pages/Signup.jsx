@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
 import Navbar from '../components/Navbar';
+import useAuth from '../context/AuthContext';
 
 const Signup = () => {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -13,6 +15,12 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate('/home');
+    }
+  }, [token, navigate]);
 
   const { username, email, password, confirmPassword } = formData;
 
@@ -36,6 +44,7 @@ const Signup = () => {
       };
       
       const response = await axios.post('/auth/register', dataToSend);
+      console.log(response.data);
       
       // Store the token in localStorage if provided in response
       if (response.data.token) {
@@ -43,7 +52,7 @@ const Signup = () => {
       }
       
      
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {

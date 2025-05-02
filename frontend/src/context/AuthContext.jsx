@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(()=>{
         const token = localStorage.getItem("userToken");
         if(token){
-            setToken({token});
+            setToken(token);
         }
     },[])
     return (

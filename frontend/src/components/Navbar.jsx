@@ -112,7 +112,7 @@ function Navbar() {
                     borderRadius: "8px",
                   }}
                 >
-                  Singup
+                  Signup
                 </Link>
               </>
             )}
