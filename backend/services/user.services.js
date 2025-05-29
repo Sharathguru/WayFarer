@@ -41,6 +41,13 @@ class UserService {
     }
     return users;
   }
+  async updatePhoto(id,req)
+  {
+    console.log(req.file);
+    
+      let updatedUser=await User.findByIdAndUpdate(id,{displayPicture:req.file.path},{new:true})
+      return updatedUser;
+  }
 }
 
 let userInstance = new UserService();
