@@ -3,9 +3,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
 import Navbar from '../components/Navbar';
 import useAuth from '../context/AuthContext';
+import { 
+  Box, 
+  Button, 
+  Container, 
+  TextField, 
+  Typography, 
+  Alert,
+  Paper,
+  CircularProgress
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import LoginIcon from '@mui/icons-material/Login';
+
+
+
 
 const Login = () => {
-  const { token } = useAuth();
+  const { token,refreshAuth,setToken, setUser } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -34,11 +50,16 @@ const Login = () => {
     try {
       const response = await axios.post('/auth/login', formData);
       // Store the token in localStorage
-      localStorage.setItem('userToken', response.data.token);
+      // localStorage.setItem('userToken', response.data.token);
+      // localStorage.setItem('userDetail', JSON.stringify(response.data.user));
+      setToken(response.data.token);
+      setUser(response.data.user);
       
       // Redirect to dashboard or home page
+      // refreshAuth()
       navigate('/home');
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
@@ -46,47 +67,78 @@ const Login = () => {
   };
 
   return (
-   <div className="login-container">
-      <Navbar/>
-     <div className="form-container">
-      <div className="form-wrapper">
-        <h2>Login</h2>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Navbar />
+      <Container component="main" maxWidth="xs">
+        <Paper
+          elevation={3}
+          sx={{
+            mt: 8,
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+            Login
+          </Typography>
+
+          {error && <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{error}</Alert>}
+
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }} autoComplete='off'>
+            <TextField
+              margin="normal"
               required
-              placeholder="Enter your email"
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={formData.email}
+              onChange={handleChange}
+              InputProps={{
+                startAdornment: <EmailIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+              }}
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
               id="password"
-              name="password"
-              value={password}
+              autoComplete="current-password"
+              value={formData.password}
               onChange={handleChange}
-              required
-              placeholder="Enter your password"
+              InputProps={{
+                startAdornment: <LockIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+              }}
             />
-          </div>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        <div className="form-footer">
-          Don't have an account? <Link to="/signup">Register</Link>
-        </div>
-      </div>
-    </div>
-   </div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
+              startIcon={loading ? <CircularProgress size={20} /> : <LoginIcon />}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Typography variant="body2">
+                Don't have an account?{' '}
+                <Link to="/signup" style={{ color: 'primary.main', textDecoration: 'none' }}>
+                  Register
+                </Link>
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

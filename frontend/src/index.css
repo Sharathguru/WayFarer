@@ -10,7 +10,7 @@ body {
   background-color: #f5f5f5;
   color: #333;
   line-height: 1.6;
-  overflow: hidden;
+  overflow: none;
 }
 
 /* Form styles */
@@ -112,7 +112,7 @@ input:focus {
 }
 
 .navbar {
-  height: 9vh;
+  height: 5vh;
   width: 100%;
   background-color: #f0f8f5;
   display: flex;
@@ -205,4 +205,55 @@ input:focus {
 
 .explore-button:hover {
     background-color: #2ecc71;
+}
+
+/* Unique Saved Itineraries Card */
+.saved-itineraries-box {
+  background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  padding: 32px 24px 24px 24px;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  margin-top: 16px;
+}
+
+.saved-itineraries-header {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1e3c72;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(33, 163, 137, 0.15);
+}
+
+.saved-itinerary-list .MuiListItem-root {
+  background: rgba(255,255,255,0.85);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(67, 198, 172, 0.10);
+  transition: transform 0.15s;
+}
+.saved-itinerary-list .MuiListItem-root:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 6px 18px rgba(67, 198, 172, 0.18);
+}
+
+.saved-itinerary-list strong {
+  color: #43c6ac;
+}
+
+.saved-itinerary-list ul {
+  margin: 0 0 0 16px;
+  padding: 0;
+}
+
+.saved-itinerary-list li {
+  margin-bottom: 6px;
+}
+
+.saved-itinerary-list .MuiTypography-body2 {
+  color: #1e3c72;
 }

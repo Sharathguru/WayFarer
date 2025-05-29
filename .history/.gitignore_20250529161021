@@ -5,5 +5,3 @@ backend/package-lock.json
 frontend/package-lock.json
 
 backend/.env
-frontend/.env
-.gitignore

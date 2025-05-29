@@ -6,16 +6,21 @@ import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import itenaryRoutes from "./routes/itenary.routes.js";
 import { rateLimit } from 'express-rate-limit';
+import stripeRoutes from './routes/stripe.routes.js'
+import webhookRoute from './routes/webhook.routes.js'
 import cors from "cors";
+
 connectDB();
 let app = express();
 
 //middleware stack
+app.use("/api/v1/stripe/webhook",express.raw({ type: 'application/json' }))
 app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 200,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
 })
@@ -25,7 +30,10 @@ app.use(limiter)
 app.use(cors()) // Enable CORS for all routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/itenary",itenaryRoutes)
+app.use("/api/v1/itenaries",itenaryRoutes)
+app.use('/api/v1/stripe', stripeRoutes);
+app.use("/api/v1/stripe/webhook",webhookRoute)
+
 
 app.all("*", (req, res, next) => {
   let err = new Error("Page not found");

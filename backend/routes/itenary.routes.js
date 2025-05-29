@@ -1,12 +1,23 @@
 import express from 'express';
-import itineraryController from '../controllers/itenary.controllers.js';
+import {
+  travelPlan,
+  getAllItinerary,
+  GeminiTravelPlan,
+  deleteItinerary,
+  getAutoComplete,
+  getItineraryById
+} from '../controllers/itenary.controllers.js';
 import validateSchema from '../middlewares/validate.js';
 import itinerarySchema from '../validators/itenary.validator.js';
+import auth from '../middlewares/auth.js';
 
 const itineraryRouter = express.Router();
 
-itineraryRouter.post("/",validateSchema(itinerarySchema),itineraryController.travelPlan);
-itineraryRouter.get("/",itineraryController.getAllItinerary);
-itineraryRouter.delete("/:id",itineraryController.deleteItinerary);
+itineraryRouter.post("/", validateSchema(itinerarySchema), travelPlan);
+itineraryRouter.get("/", getAllItinerary);
+itineraryRouter.post("/gemini",auth, GeminiTravelPlan);
+itineraryRouter.delete("/:id", auth, deleteItinerary);
+itineraryRouter.get("/autocomplete", getAutoComplete);
+itineraryRouter.get('/:id', auth, getItineraryById);
 
 export default itineraryRouter;
