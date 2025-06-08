@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const axiosInstance=axios.create({
-    baseURL: "http://localhost:5000/api/v1",
+    baseURL: "https://wayfarer-rj79.onrender.com",
     headers: {
         "Content-Type": "application/json",
     }
