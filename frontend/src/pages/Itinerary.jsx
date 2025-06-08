@@ -9,23 +9,21 @@ import {
   Typography,
   Grid,
   Divider,
-  Chip,
   List,
   ListItem,
   ListItemText,
   ListItemIcon,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
+
 import Navbar from "../components/Navbar";
 import { format } from "date-fns";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
-import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Itinerary = () => {
@@ -44,8 +42,6 @@ const Itinerary = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(res);
-
       setItinerary(res.data);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch itinerary");
@@ -56,18 +52,12 @@ const Itinerary = () => {
 
   useEffect(() => {
     fetchItinerary(id);
+    // eslint-disable-next-line
   }, [id]);
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
       </Box>
     );
@@ -75,14 +65,7 @@ const Itinerary = () => {
 
   if (error) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Typography color="error">{error}</Typography>
       </Box>
     );
@@ -91,25 +74,28 @@ const Itinerary = () => {
   return (
     <>
       <Navbar />
-      <Container maxWidth="md" sx={{ mt: 4, marginBottom: 4 }}>
+      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
           <IconButton onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </IconButton>
+
           <Typography variant="h4" gutterBottom>
             {itinerary.location}
           </Typography>
+
           <Divider sx={{ my: 2 }} />
+
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1">
-                <FlightTakeoffIcon sx={{ mr: 1 }} /> Travel Type:{" "}
-                {itinerary.travelType}
+                <FlightTakeoffIcon sx={{ mr: 1 }} /> Travel Type: {itinerary.travelType}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1">
-                <DateRangeIcon sx={{ mr: 1 }} /> Dates:{" "}
+                <DateRangeIcon sx={{ mr: 1 }} />
+                Dates:{" "}
                 {format(new Date(itinerary.startDate), "MMM dd, yyyy")} -{" "}
                 {format(new Date(itinerary.endDate), "MMM dd, yyyy")}
               </Typography>
@@ -120,42 +106,45 @@ const Itinerary = () => {
               </Typography>
             </Grid>
           </Grid>
+
           <Divider sx={{ my: 2 }} />
+
           <Typography variant="h6" gutterBottom>
             Daily Plans
           </Typography>
+
           <List>
             {itinerary.itinerary.days.map((day, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <DateRangeIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={`Date: ${day.date}`}
-                  secondary={`Plan: ${day.plan.join(", ")}`}
-                />
+              <ListItem
+                key={index}
+                sx={{ flexDirection: "column", alignItems: "flex-start" }}
+              >
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Date: {day.date}
+                </Typography>
+                <Grid container spacing={2}>
+                  {(day.planDetails || []).map((plan, i) => (
+                    <Grid item key={i}>
+                      <img
+                        src={plan.photoUrl || "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"}
+                        alt={plan.placeName}
+                        onError={(e) => {
+                          e.target.src = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                        }}
+                        style={{ width: "150px", height: "100px", objectFit: "cover", borderRadius: 8 }}
+                      />
+                      <Typography variant="caption" display="block" align="center" mt={1}>
+                        {plan.placeName}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
               </ListItem>
             ))}
           </List>
+
           <Divider sx={{ my: 2 }} />
-          {/* {itinerary.itinerary.mustTry &&
-            itinerary.itinerary.mustTry.length > 0 && (
-              <>
-                <Typography variant="h6" gutterBottom>
-                  Must Try
-                </Typography>
-                <List>
-                  {itinerary.itinerary.mustTry
-                    .slice(0, 3)
-                    .map((item, index) => (
-                      <ListItem key={index}>
-                        <ListItemText primary={item} />
-                      </ListItem>
-                    ))}
-                </List>
-                <Divider sx={{ my: 2 }} />
-              </>
-            )} */}
+
           <Typography variant="h6" gutterBottom>
             Tips
           </Typography>
@@ -170,18 +159,6 @@ const Itinerary = () => {
                 </ListItem>
               ))}
           </List>
-          {/* <Divider sx={{ my: 2 }} />
-          <Typography variant="h6" gutterBottom>
-            Guidelines
-          </Typography>
-          <List>
-            {itinerary.itinerary.guidelines &&
-              itinerary.itinerary.guidelines.slice(0, 3).map((guide, index) => (
-                <ListItem key={index}>
-                  <ListItemText primary={guide} />
-                </ListItem>
-              ))}
-          </List> */}
         </Paper>
       </Container>
     </>
