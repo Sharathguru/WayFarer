@@ -19,12 +19,14 @@ class ItineraryService {
 
     const gemini = new Gemini(process.env.KEY_OPENAI);
     const prompt = `Create a travel itinerary for travel type "${travelType}" in "${location}" from "${startDate}" to "${endDate}" with a budget of $${budget}.
-Return ONLY valid JSON. NO markdown. NO explanation. NO comments. ONLY one single JSON object like:
+Return ONLY valid JSON. ONLY one single JSON object like:
 {
   "days": [
     {
       "date": "YYYY-MM-DD",
-      "plan": ["activity/place 1", "activity/place 2"],
+      "plan": {
+  [{"location":"activity"}]
+      },
       "cost": 0,
       "tip": "daily tip"
     }
@@ -46,6 +48,8 @@ Return ONLY valid JSON. NO markdown. NO explanation. NO comments. ONLY one singl
     } catch (err) {
       itineraryJson = JSON.parse(jsonrepair(response));
     }
+
+    console.log("Itenary ",itineraryJson);
 
     // Generate images using Unsplash for each place in the plan
     for (const day of itineraryJson.days) {

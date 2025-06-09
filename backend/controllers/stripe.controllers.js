@@ -1,6 +1,7 @@
 // import second from ''
 import Stripe from 'stripe';
 import User from '../models/user.model.js';
+import axios from 'axios';
 
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
