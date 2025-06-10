@@ -6,7 +6,10 @@ import Gemini from "gemini-ai";
 
 class ItineraryService {
   async GeminiTravelPlan(req) {
+
+   
     const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
+    console.log(UNSPLASH_ACCESS_KEY)
     const { travelType, location, startDate, endDate, budget } = req.body;
 
     // Optionally limit itinerary creation for free users
@@ -17,6 +20,7 @@ class ItineraryService {
     //   throw err;
     // }
 
+    console.log(req.body)
     const gemini = new Gemini(process.env.KEY_OPENAI);
     const prompt = `Create a travel itinerary for travel type "${travelType}" in "${location}" from "${startDate}" to "${endDate}" with a budget of $${budget}.
 Return ONLY valid JSON. ONLY one single JSON object like:
@@ -24,9 +28,7 @@ Return ONLY valid JSON. ONLY one single JSON object like:
   "days": [
     {
       "date": "YYYY-MM-DD",
-      "plan": {
-  [{"location":"activity"}]
-      },
+       "plan": ["place 1", "place 2"],
       "cost": 0,
       "tip": "daily tip"
     }
@@ -52,6 +54,7 @@ Return ONLY valid JSON. ONLY one single JSON object like:
     console.log("Itenary ",itineraryJson);
 
     // Generate images using Unsplash for each place in the plan
+     // Generate images using Unsplash for each place in the plan
     for (const day of itineraryJson.days) {
       day.planDetails = await Promise.all(
         day.plan.map(async (placeName) => {
@@ -66,21 +69,19 @@ Return ONLY valid JSON. ONLY one single JSON object like:
                 },
               }
             );
+            console.log("Unsplash result for", placeName, unsplashRes.data); // <-- Add this line
             const imageUrl =
               unsplashRes.data.results.length > 0
                 ? unsplashRes.data.results[0].urls.small
-                : "https://via.placeholder.com/512x512?text=No+Image";
+                : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
             return {
               photoUrl: imageUrl,
               placeName,
             };
           } catch (err) {
-            console.error(
-              `Error fetching image from Unsplash for "${placeName}":`,
-              err.message
-            );
+            console.error("Unsplash error for", placeName, err.message);
             return {
-              photoUrl: "https://via.placeholder.com/512x512?text=No+Image",
+              photoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg",
               placeName,
             };
           }

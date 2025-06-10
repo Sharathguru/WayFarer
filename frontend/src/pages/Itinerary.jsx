@@ -26,6 +26,8 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
+const fallbackImage = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+
 const Itinerary = () => {
   const [itinerary, setItinerary] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,6 +44,7 @@ const Itinerary = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("Itinerary Data:", res.data);
       setItinerary(res.data);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch itinerary");
@@ -52,7 +55,6 @@ const Itinerary = () => {
 
   useEffect(() => {
     fetchItinerary(id);
-    // eslint-disable-next-line
   }, [id]);
 
   if (loading) {
@@ -115,26 +117,36 @@ const Itinerary = () => {
 
           <List>
             {itinerary.itinerary.days.map((day, index) => (
+              
               <ListItem
                 key={index}
                 sx={{ flexDirection: "column", alignItems: "flex-start" }}
               >
+                {console.log("Day Data:", day)}
                 <Typography variant="subtitle2" sx={{ mb: 1 }}>
                   Date: {day.date}
                 </Typography>
                 <Grid container spacing={2}>
-                  {(day.planDetails || []).map((plan, i) => (
+                  {day.planDetails?.map((plan, i) => (
                     <Grid item key={i}>
+                      {console.log("Plan Data:", plan)}
                       <img
-                        src={plan.photoUrl || "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"}
+                        src={plan.photoUrl || fallbackImage}
                         alt={plan.placeName}
                         onError={(e) => {
-                          e.target.src = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                          e.target.src = fallbackImage;
                         }}
-                        style={{ width: "150px", height: "100px", objectFit: "cover", borderRadius: 8 }}
+                        style={{ width: "150px", height: "100px", borderRadius: 8 }}
                       />
-                      <Typography variant="caption" display="block" align="center" mt={1}>
-                        {plan.placeName}
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        align="center"
+                        mt={1}
+                      >
+                        {typeof plan.placeName === "object"
+                          ? `${plan.placeName.location || ""} ${plan.placeName.activity || ""}`
+                          : plan.placeName}
                       </Typography>
                     </Grid>
                   ))}
@@ -149,15 +161,14 @@ const Itinerary = () => {
             Tips
           </Typography>
           <List>
-            {itinerary.itinerary.tips &&
-              itinerary.itinerary.tips.slice(0, 3).map((tip, index) => (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    <TipsAndUpdatesIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={tip} />
-                </ListItem>
-              ))}
+            {itinerary.itinerary.tips?.slice(0, 3).map((tip, index) => (
+              <ListItem key={index}>
+                <ListItemIcon>
+                  <TipsAndUpdatesIcon />
+                </ListItemIcon>
+                <ListItemText primary={tip} />
+              </ListItem>
+            ))}
           </List>
         </Paper>
       </Container>
